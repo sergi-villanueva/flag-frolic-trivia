@@ -1,7 +1,16 @@
-// 1. Cambia el import de BrowserRouter a HashRouter
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+import './index.css';
+// Importamos HashRouter para que funcione en archivos locales
 import { HashRouter } from 'react-router-dom';
 
-// 2. En la parte del Render, envuelve tu App con HashRouter
+const rootElement = document.getElementById('root');
+
+if (!rootElement) throw new Error('Failed to find the root element');
+
+const root = ReactDOM.createRoot(rootElement);
+
 root.render(
   <React.StrictMode>
     <HashRouter>
