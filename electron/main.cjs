@@ -1,51 +1,36 @@
 const { app, BrowserWindow } = require('electron');
-const isDev = !app.isPackaged;
 const path = require('path');
+const url = require('url');
 
 function createWindow() {
   const win = new BrowserWindow({
-    width: 1280,
-    height: 720,
-    title: 'Flag Frolic Trivia',
+    width: 1200,
+    height: 800,
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
-    },
+      sandbox: false
+    }
   });
 
-  win.setMenuBarVisibility(false);
+  // Esto crea una ruta segura para cargar el index.html sin errores de 404
+  const startUrl = url.format({
+    pathname: path.join(__dirname, '../dist/index.html'),
+    protocol: 'file:',
+    slashes: true
+  });
 
-  // En desarrollo vs producción
-  if (isDev) {
-    // En desarrollo, usar el servidor de Vite
-    win.loadURL('http://localhost:5173');
-  } else {
-    // En producción, construir la ruta correctamente
-    const indexPath = path.join(__dirname, '..', 'dist', 'index.html');
-    const fileUrl = `file://${path.resolve(indexPath)}`;
-    
-    console.log('Loading from:', fileUrl);
-    
-    win.loadURL(fileUrl).catch(err => {
-      console.error('Failed to load index.html:', err);
-      // Si falla, intentar cargar desde una ruta alternativa
-      const alternativePath = path.join(app.getAppPath(), 'dist', 'index.html');
-      const alternativeUrl = `file://${path.resolve(alternativePath)}`;
-      console.log('Trying alternative path:', alternativeUrl);
-      
-      win.loadURL(alternativeUrl).catch(err2 => {
-        console.error('Failed to load alternative path:', err2);
-      });
-    });
-  }
+  win.loadURL(startUrl);
+
+  // Desactivar el menú superior (opcional)
+  // win.setMenu(null);
 }
+
+// Desactivar aceleración por hardware (Vital para máquinas virtuales y evitar crasheos)
+app.disableHardwareAcceleration();
 
 app.whenReady().then(createWindow);
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
-});
-
-app.on('activate', () => {
-  if (BrowserWindow.getAllWindows().length === 0) createWindow();
 });
