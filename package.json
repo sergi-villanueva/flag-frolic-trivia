@@ -90,9 +90,9 @@
       "output": "dist_electron"
     },
     "files": [
-      "dist/**/*",
-      "electron/main.cjs",
-      "package.json"
+    "dist/**/*",
+    "electron/**/*",
+    "package.json"
     ],
     "win": {
       "target": "portable",
