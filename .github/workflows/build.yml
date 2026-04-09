@@ -1,5 +1,7 @@
 name: Build Game
-on: [push]
+on: 
+  push:
+  workflow_dispatch:
 
 jobs:
   release:
@@ -16,14 +18,12 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22 # Actualizamos a la 22 para evitar avisos de depreciación
+          node-version: 22 # Actualizado a 22 para evitar el error de la imagen
 
       - name: Install dependencies
-        # EL CAMBIO CLAVE: Forzamos la instalación ignorando conflictos de peer deps
         run: npm install --legacy-peer-deps
 
       - name: Build Web App
-        # CI: false ignora warnings de código que podrían detener el build
         run: npm run build
         env:
           CI: false
